@@ -1,0 +1,6 @@
+pass:bh2d(r1po,mcfx)
+text size=11
+hash=32
+chipherTextBuf=27
+chipherText=16
+final chipher text size=48(chipher text+hash)
