@@ -1,7 +1,8 @@
 #include"Hash.h"
-#include<iostream>
 #include <openssl/sha.h>
 #include"WriteFile.h"
+#include <iostream>
+#include <mutex>
 
 void CalculateHash(const std::vector<unsigned char>& data, std::vector<unsigned char>& hash)
 {
@@ -15,11 +16,11 @@ void CalculateHash(const std::vector<unsigned char>& data, std::vector<unsigned 
 	hash.swap(hashTmp);
 }
 
-void ExtractHash(std::vector<unsigned char>& hashBuf, std::vector<unsigned char>& buf) {
+void ExtractHash(std::vector<unsigned char>& hashBuf, std::vector<unsigned char>& encryptedText) {
 
 	hashBuf.clear();
 	for (size_t i = SHA256_DIGEST_LENGTH; i > 0; --i) {
-		hashBuf.push_back(buf[buf.size() - i]);
+		hashBuf.push_back(encryptedText[encryptedText.size() - i]);
 	}
 }
 
@@ -28,9 +29,12 @@ bool CompareHash(const std::string& filePath, std::vector<unsigned char>& source
 	std::vector<unsigned char> hash;
 	CalculateHash(decryptedText, hash);
 	if (hash == sourceHash) {
-		WriteFile(filePath + "dec", decryptedText);
+		std::mutex mtx;
+		std::unique_lock<std::mutex> lock(mtx);
 		std::cout << "Correct password is " << pass << std::endl;
-		return  true;
+        WriteFile(filePath + "dec", decryptedText);
+		return true;
+		lock.unlock();
 	}
 	return false;
 }
