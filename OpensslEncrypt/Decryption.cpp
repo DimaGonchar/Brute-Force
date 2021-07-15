@@ -10,7 +10,7 @@ unsigned char iv[EVP_MAX_IV_LENGTH];
 
 void PasswordToKey(std::string& password)
 {
-	OpenSSL_add_all_digests();
+	//OpenSSL_add_all_digests();
 	const EVP_MD* dgst = EVP_get_digestbyname("md5");
 	if (!dgst)
 	{

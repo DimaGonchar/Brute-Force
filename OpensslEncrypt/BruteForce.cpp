@@ -2,25 +2,26 @@
 #include"Hash.h"
 #include"Decryption.h"
 #include"GenPass.h"
+#include<iostream>
 
-std::mutex mut;
 void BruteForce(std::string& filePath, const std::vector<unsigned char>& chipherText,
 	            std::vector<unsigned char>& hash,std::vector<std::string>* passwords,
 	            GenPasswords* genPass, bool* status)
 {
-	while (*status!=true)
+  	while (*status!=true)
 	{
 		genPass->Gen(*passwords);
-		std::unique_lock<std::mutex>guar(mut);
+		
 		for (auto& i : *passwords)
 		{
-			PasswordToKey(i);
-			std::vector<unsigned char> decryptedText;
+          	PasswordToKey(i);
+			 std::vector<unsigned char> decryptedText;
 			if (DecryptAes(chipherText, decryptedText) == true)
 			{
-				if(CompareHash(filePath, hash, decryptedText,i)==true)
+				if (CompareHash(filePath, hash, decryptedText, i) == true)
 				{
-				*status = true;
+					*status = true;
+					 break;
 				}
 			}
 		}
