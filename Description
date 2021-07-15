@@ -1,0 +1,1 @@
+a console program that selects a password for an encrypted file (at the moment, password selection is implemented up to 4 characters inclusive. The power of the alphabet is 36 characters (lower case letters + numbers))
